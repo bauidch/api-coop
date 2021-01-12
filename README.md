@@ -1,17 +1,12 @@
-<h1 style='color:red'>Important: API suspended indefinitely</h1>
+<h1 style='color:red'>WIP, reactivate API</h1>
 
-# Coop
+# Coop API
 
-## Clients
-
-### iOS
-The app is available from the [AppStore](https://appsto.re/ch/EAI0cb.i).
-
-### telegram
-The telegram bot is available [here](https://telegram.me/CoopMenuBot).
+This is a fork of [jeremystucki/coop](https://github.com/jeremystucki/coop)
+An unofficial Coop Restaurant API
 
 ## API
-The api is hosted at [themachine.jeremystucki.com](https://themachine.jeremystucki.com).
+The api is hosted at ... .
 
 ### Locations
 `GET /coop/api/v2/locations`
@@ -96,7 +91,7 @@ X | - | _optional_ | Get all locations, sorted by distance
 }
 ```
 
+## Datasource
+
 ## Thanks to
-[@bash](https://github.com/bash)
-[@bauidch](https://github.com/bauidch)
-[@randalf98](https://github.com/randalf98)
+[@jeremystucki](https://github.com/jeremystucki)
