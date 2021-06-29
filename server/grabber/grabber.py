@@ -27,7 +27,7 @@ for restaurant in data['vstList']:
             'street': restaurant['strasse'],
             'house_number': restaurant['hausnummer'],
             'city': restaurant['ort'],
-            'zip': int(restaurant['plz'])
+            'postcode': int(restaurant['plz'])
         },
         'name': restaurant['name'],
         'last_updated': timestamp
@@ -46,7 +46,7 @@ db.get_collection('locations_history').ensure_index([('coordinates', '2dsphere')
 db.get_collection('locations').ensure_index([('name', pymongo.TEXT)], default_language='german')
 db.get_collection('locations_history').ensure_index([('name', pymongo.TEXT)], default_language='german')
 
-db.get_collection('menus_temp').drop()
+# db.get_collection('menus_loading').drop()
 
 all_weekdays = []
 
@@ -86,7 +86,7 @@ def get_menus_for_data(response: requests.Response, location_id: int, next_week:
                 pass
 
     if len(menus) > 0:
-        db.get_collection('menus_temp').insert(menus)
+        db.get_collection('menus_loading').insert(menus)
 
 
 def get_menus_for_location(location_id):
@@ -97,40 +97,18 @@ def get_menus_for_location(location_id):
         except:
             pass
 
-    # response = requests.get('http://www.coop.ch/pb/site/restaurant/node/73195219/Lde/index.html?nextWeek=true', headers=headers)
-    # if response.status_code == 200:
-    #     getMenusForData(response, location_id, next_week=True)
-
-
-# tasks = []
-
 for location in list(db.get_collection('locations').find()):
     print('Fetching ' + location['name'])
 
     get_menus_for_location(location['_id'])
     sleep(5)
 
-#     tasks.append(threading.Thread(target=get_menus_for_location, args=(location['_id'],)))
+# old_menus = list(db.get_collection('menus').find({'timestamp': {'$lt': min(all_weekdays)}}))
 #
-#     if len(tasks) > 15:
-#         for thread in tasks:
-#             thread.start()
-#         for thread in tasks:
-#             thread.join()
+# if len(old_menus) > 0:
+#     db.get_collection('menus_history').insert(old_menus)
 #
-#         tasks = []
-#
-# for thread in tasks:
-#     thread.start()
-# for thread in tasks:
-#     thread.join()
+# db.get_collection('menus_history').ensure_index([('location_id', pymongo.ASCENDING)])
 
-old_menus = list(db.get_collection('menus').find({'timestamp': {'$lt': min(all_weekdays)}}))
-
-if len(old_menus) > 0:
-    db.get_collection('menus_history').insert(old_menus)
-
-db.get_collection('menus_history').ensure_index([('location_id', pymongo.ASCENDING)])
-
-db.get_collection('menus_temp').create_index([('location_id', pymongo.ASCENDING), ('timestamp', pymongo.ASCENDING)])
-db.get_collection('menus_temp').rename('menus', dropTarget=True)
+db.get_collection('menus_loading').create_index([('location_id', pymongo.ASCENDING), ('timestamp', pymongo.ASCENDING)])
+db.get_collection('menus_loading').rename('menus', dropTarget=True)
