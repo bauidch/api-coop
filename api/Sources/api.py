@@ -16,8 +16,8 @@ locationsDAO = LocationsDAO(db.get_collection('locations'))
 menusDAO = MenusDAO(db.get_collection('menus'))
 
 
-@app.route('/coop/api/v2/locations/<id>')
-@app.route('/coop/api/v2/restaurants/<id>')
+@app.route('/v1/locations/<id>')
+@app.route('/v1/restaurants/<id>')
 def get_locations_by_id(id: str = None):
     try:
         location_id = int(id)
@@ -31,8 +31,8 @@ def get_locations_by_id(id: str = None):
         return flask.Response(json.dumps({'error': 'id must be an integer'}), status=400, mimetype='application/json')
 
 
-@app.route('/coop/api/v2/locations')
-@app.route('/coop/api/v2/restaurants')
+@app.route('/v1/locations')
+@app.route('/v1/restaurants')
 def get_locations():
     args = flask.request.args
     longitude, latitude, query, limit = (None,)*4
@@ -63,10 +63,10 @@ def get_locations():
     return flask.jsonify({'results': data})
 
 
-@app.route('/coop/api/v2/locations/<id>/menus')
-@app.route('/coop/api/v2/locations/<id>/menus/<timestamp>')
-@app.route('/coop/api/v2/restaurants/<id>/menus')
-@app.route('/coop/api/v2/restaurants/<id>/menus/<timestamp>')
+@app.route('/v1/locations/<id>/menus')
+@app.route('/v1/locations/<id>/menus/<timestamp>')
+@app.route('/v1/restaurants/<id>/menus')
+@app.route('/v1/restaurants/<id>/menus/<timestamp>')
 def get_menus(id: str, timestamp: str = None):
     args = flask.request.args
 

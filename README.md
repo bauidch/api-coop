@@ -9,7 +9,7 @@ An unofficial Coop Restaurant API
 The api is hosted at ... .
 
 ### Locations
-`GET /coop/api/v2/locations`
+`GET /v1/locations`
 
 #### Parameters
 latitude and longitude | query | limit | description
@@ -42,7 +42,7 @@ X | - | _optional_ | Get all locations, sorted by distance
 ```
 
 ### Location detail
-`GET /coop/api/v2/locations/<id>`
+`GET /api/v1/locations/<id>`
 ```json
 {
   "id": 2524,
@@ -65,13 +65,13 @@ X | - | _optional_ | Get all locations, sorted by distance
 ### Menus
 
 #### All menus for location
-`GET /coop/api/v2/locations/<id>/menus`
+`GET /v1/locations/<id>/menus`
 
 #### All menus for today
-`GET /coop/api/v2/locations/<id>/menus/today`
+`GET /v1/locations/<id>/menus/today`
 
 #### All menus for a specific date
-`GET /coop/api/v2/locations/<id>/menus/<timestamp>` // Midnight GMT
+`GET /v1/locations/<id>/menus/<timestamp>` // Midnight GMT
 
 ```json
 {
@@ -92,6 +92,7 @@ X | - | _optional_ | Get all locations, sorted by distance
 ```
 
 ## Datasource
+coop.ch
 
-## Thanks to
-[@jeremystucki](https://github.com/jeremystucki)
+### Orginal Repo
+This is fork of [jeremystucki/coop](https://github.com/jeremystucki/coop)
