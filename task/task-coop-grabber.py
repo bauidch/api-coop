@@ -24,7 +24,7 @@ if response.status_code == 200:
         logging.info("Grap location Data")
         for restaurant in data['vstList']:
             db_objc = {
-                '_id': restaurant['betriebsNummerId']['id'],
+                '_id': int(restaurant['betriebsNummerId']['id']),
                 'coordinates': {
                     'type': 'Point',
                     'coordinates': [restaurant['geoKoordinaten']['longitude'], restaurant['geoKoordinaten']['latitude']]
@@ -76,7 +76,7 @@ def get_menus_for_data(response: requests.Response, location_id: int):
             else:
                 logging.debug("ignore \"Nächste Woche\" on weekday menu grapping")
     except:
-        logging.warning("can not fetch weekdays for " + location_id)
+        logging.warning("can not fetch weekdays for " + str(location_id))
         pass
 
     for (index, timestamp) in enumerate(weekdays):
@@ -97,7 +97,7 @@ def get_menus_for_data(response: requests.Response, location_id: int):
                 ingredients = list(filter(None, ingredients))
 
                 menus.append({
-                    'location_id': int(location_id),
+                    'location_id': location_id,
                     'vegetarian': vegetarian,
                     'menu': ingredients,
                     'price': float(price),
@@ -105,26 +105,26 @@ def get_menus_for_data(response: requests.Response, location_id: int):
                     'title': title
                 })
             except:
-                logging.error("Problem by parsing a menu for " + location_id)
+                logging.error("Problem by parsing a menu for " + str(location_id))
                 pass
 
     if len(menus) > 0:
-        logging.debug("Add " + str(len(menus)) + " menus from " + location_id + " to collection")
+        logging.debug("Add " + str(len(menus)) + " menus from " + str(location_id) + " to collection")
         db.get_collection('menus_loading').insert_many(menus)
     else:
         logging.warning("No menus for " + location_id)
 
 
 def get_menus_for_location(location_id):
-    response = requests.get('https://www.coop-restaurant.ch/de/menueseite.vst' + location_id + '.restaurant.html')
+    response = requests.get('https://www.coop-restaurant.ch/de/menueseite.vst' + str(location_id) + '.restaurant.html')
     if response.status_code == 200:
         get_menus_for_data(response, location_id)
     else:
-        logging.error("Connection Problem on " + location_id + " status code: " + response.status_code)
+        logging.error("Connection Problem on " + str(location_id) + " status code: " + response.status_code)
 
 
 for location in list(db.get_collection('locations').find()):
-    logging.info('Fetching ' + location['name'] + " - " + location['_id'])
+    logging.info('Fetching ' + location['name'] + " - " + str(location['_id']))
 
     get_menus_for_location(location['_id'])
     sleep(5)

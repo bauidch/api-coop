@@ -13,7 +13,8 @@ class MenusDAO:
             '_id': 0,
             'title': 1,
             'menu': 1,
-            'price': 1
+            'price': 1,
+            'vegetarian': 1
         }
 
         if timestamp is not None:

@@ -1,4 +1,7 @@
 import pymongo
+import logging
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s %(name)s %(levelname)s %(message)s', datefmt='%d-%m-%y %H:%M:%S')
 
 
 class LocationsDAO:
@@ -7,18 +10,22 @@ class LocationsDAO:
 
     # noinspection PyShadowingBuiltins
     def get_location(self, id: int):
-        location = self.collection.find_one({
+        query = {
             '_id': id
-        }, {
+        }
+        projection = {
             '_id': 1,
             'address': 1,
             'coordinates': 1,
             'name': 1
-        })
+        }
+        location = self.collection.find_one(query, projection)
 
         if location is not None:
             location['id'] = location.pop('_id')
             return location
+        else:
+            logging.warning("LocationsDAO  location is none")
 
     def get_locations(self, search_text: str = '', limit: int = None) -> list:
         query = {}

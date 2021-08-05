@@ -1,5 +1,6 @@
 import json
 from datetime import datetime
+import logging
 
 import flask
 import pymongo
@@ -9,9 +10,10 @@ from flask import Flask
 from locations import LocationsDAO
 from menus import MenusDAO
 
+logging.basicConfig(level=logging.INFO, format='%(asctime)s %(name)s %(levelname)s %(message)s', datefmt='%d-%m-%y %H:%M:%S')
 app = Flask(__name__)
 
-db = pymongo.MongoClient().get_database('coop')
+db = pymongo.MongoClient('mongodb://localhost:27017/').get_database('coop')
 locationsDAO = LocationsDAO(db.get_collection('locations'))
 menusDAO = MenusDAO(db.get_collection('menus'))
 
@@ -24,10 +26,12 @@ def get_locations_by_id(id: str = None):
         location = locationsDAO.get_location(location_id)
 
         if location is None:
+            app.error("client error: no location with id " + id + " found")
             return flask.Response(json.dumps({'error': 'no location found'}), status=404, mimetype='application/json')
 
         return flask.jsonify(location)
     except Exception:
+        logging.error("client error: id " + id + " is not an integer")
         return flask.Response(json.dumps({'error': 'id must be an integer'}), status=400, mimetype='application/json')
 
 
