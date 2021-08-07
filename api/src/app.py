@@ -7,13 +7,14 @@ import pymongo
 import pytz
 from flask import Flask
 
-from locations import LocationsDAO
-from menus import MenusDAO
+from .locations import LocationsDAO
+from .menus import MenusDAO
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(name)s %(levelname)s %(message)s', datefmt='%d-%m-%y %H:%M:%S')
 app = Flask(__name__)
+logging.info("Start Application")
 
-db = pymongo.MongoClient('mongodb://localhost:27017/').get_database('coop')
+db = pymongo.MongoClient('mongodb://mongo:27017').get_database('coop')
 locationsDAO = LocationsDAO(db.get_collection('locations'))
 menusDAO = MenusDAO(db.get_collection('menus'))
 
@@ -31,7 +32,7 @@ def get_locations_by_id(id: str = None):
 
         return flask.jsonify(location)
     except Exception:
-        logging.error("client error: id " + id + " is not an integer")
+        app.error("client error: id " + id + " is not an integer")
         return flask.Response(json.dumps({'error': 'id must be an integer'}), status=400, mimetype='application/json')
 
 
@@ -93,7 +94,3 @@ def get_menus(id: str, timestamp: str = None):
             return flask.Response(json.dumps({'error': 'timestamp must be an integer'}), status=400, mimetype='application/json')
 
     return flask.jsonify({'results': menusDAO.get_menus(location=location_id, timestamp=timestamp)})
-
-
-if __name__ == '__main__':
-    app.run('0.0.0.0', '8080')

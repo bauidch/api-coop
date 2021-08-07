@@ -1,0 +1,10 @@
+PHONY: build-api build-task
+build-api
+	@bash cd api
+	@bash docker build -t api-coop:dev
+
+run-dev-api
+    @bash cd ops
+    @bash docker-compose --file=docker-compose.dev.yml up -d
+
+release-api

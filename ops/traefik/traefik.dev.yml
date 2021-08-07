@@ -1,0 +1,18 @@
+entryPoints:
+    web:
+        address: :80
+
+# Traefik dashboard over http
+api:
+    dashboard: true
+    insecure: true
+
+log:
+    level: DEBUG
+
+accessLog:
+
+# containers are not discovered automatically
+providers:
+    docker:
+        exposedByDefault: false

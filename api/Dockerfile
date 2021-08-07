@@ -1,8 +1,11 @@
-FROM python:3.6
+FROM python:3.6-slim
 
-ADD Sources/* ./
-ADD requirements.txt .
+COPY --chown=1000 requirements.txt requirements.txt
+RUN pip install -U pip && pip install -r requirements.txt
 
-RUN pip install -r requirements.txt
+COPY --chown=1000 ./src /app/src
+COPY --chown=1000 wsgi.py /app/wsgi.py
 
-CMD python api.py
+COPY --chown=1000 resources/entrypoint.sh /entrypoint.sh
+
+ENTRYPOINT [ "/entrypoint.sh" ]

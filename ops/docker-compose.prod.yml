@@ -1,0 +1,34 @@
+version: '3.8'
+services:
+  mongo:
+    container_name: mongo
+    image: mongo
+    volumes:
+      - ./data:/data/dbocker
+    ports:
+      - '27017:27017'
+  api-coop:
+    container_name: api-coop
+    image: api-coop:5
+    depends_on:
+      - mongo
+    expose:
+      - '8080'
+    environment:
+      - FLASK_ENV=production
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.api-coop.rule=Host(`api-coop.svc.bauid.ch`)"
+      - "traefik.http.routers.api-coop.tls=true"
+      - "traefik.http.routers.api-coop.tls.certresolver=letsencrypt"
+
+  traefik:
+    container_name: traefik
+    image: traefik:v2.4
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - "./traefik/traefik.prod.yml:/etc/traefik/traefik.yml"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./le-certificates:/certificates"

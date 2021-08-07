@@ -12,7 +12,7 @@ from bs4 import BeautifulSoup
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(name)s %(levelname)s %(message)s', datefmt='%d-%m-%y %H:%M:%S')
 start_time = time.time()
-db = pymongo.MongoClient().get_database('coop')
+db = pymongo.MongoClient('mongodb://127.0.0.1:27017').get_database('coop')
 
 url = 'http://www.coop.ch/de/services/standorte-und-oeffnungszeiten.getvstlist.json?lat=47.0547336&lng=8.2122653&start=1&end=1000&filterFormat=restaurant&filterAttribute=&gasIndex=0'
 response = requests.get(url)
@@ -112,7 +112,7 @@ def get_menus_for_data(response: requests.Response, location_id: int):
         logging.debug("Add " + str(len(menus)) + " menus from " + str(location_id) + " to collection")
         db.get_collection('menus_loading').insert_many(menus)
     else:
-        logging.warning("No menus for " + location_id)
+        logging.warning("No menus for " + str(location_id))
 
 
 def get_menus_for_location(location_id):
