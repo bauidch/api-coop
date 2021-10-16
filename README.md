@@ -1,12 +1,11 @@
-<h1 style='color:red'>WIP, reactivate API</h1>
-
 # Coop API
 
 This is a fork of [jeremystucki/coop](https://github.com/jeremystucki/coop)
 An unofficial Coop Restaurant API
 
 ## API
-The api is hosted at ... .
+The api is hosted at https://api-coop.svc.bauid.ch
+
 
 ### Locations
 `GET /v1/locations`
@@ -90,6 +89,7 @@ X | - | _optional_ | Get all locations, sorted by distance
   ]
 }
 ```
+
 
 ## Datasource
 coop.ch

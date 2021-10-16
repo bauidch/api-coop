@@ -55,7 +55,7 @@ if response.status_code == 200:
         logging.error("Failed to write Location to mongodb")
         pass
 else:
-    logging.warning("Connection Problem on location grapping, status code: " + response.status_code)
+    logging.warning("Connection Problem on location grapping, status code: " + str(response.status_code))
 
 
 # db.get_collection('menus_loading').drop()
@@ -120,7 +120,7 @@ def get_menus_for_location(location_id):
     if response.status_code == 200:
         get_menus_for_data(response, location_id)
     else:
-        logging.error("Connection Problem on " + str(location_id) + " status code: " + response.status_code)
+        logging.error("Connection Problem on " + str(location_id) + " status code: " + str(response.status_code))
 
 
 for location in list(db.get_collection('locations').find()):

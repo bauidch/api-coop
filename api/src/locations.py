@@ -39,7 +39,7 @@ class LocationsDAO:
         if search_text != '':
             query['$text'] = {'$search': search_text}
 
-        cursor = self.collection.find(query, projection)
+        cursor = self.collection.find(query, projection).sort("name", 1)
 
         if limit is None:
             data = list(cursor)
